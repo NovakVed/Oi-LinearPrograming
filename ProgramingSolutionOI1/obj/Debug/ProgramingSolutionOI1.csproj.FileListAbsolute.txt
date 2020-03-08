@@ -1,0 +1,10 @@
+C:\Users\edoro\Desktop\oi-programingSolution\ProgramingSolutionOI1\bin\Debug\ProgramingSolutionOI1.exe.config
+C:\Users\edoro\Desktop\oi-programingSolution\ProgramingSolutionOI1\bin\Debug\ProgramingSolutionOI1.exe
+C:\Users\edoro\Desktop\oi-programingSolution\ProgramingSolutionOI1\bin\Debug\ProgramingSolutionOI1.pdb
+C:\Users\edoro\Desktop\oi-programingSolution\ProgramingSolutionOI1\obj\Debug\ProgramingSolutionOI1.csprojAssemblyReference.cache
+C:\Users\edoro\Desktop\oi-programingSolution\ProgramingSolutionOI1\obj\Debug\ProgramingSolutionOI1.Form1.resources
+C:\Users\edoro\Desktop\oi-programingSolution\ProgramingSolutionOI1\obj\Debug\ProgramingSolutionOI1.Properties.Resources.resources
+C:\Users\edoro\Desktop\oi-programingSolution\ProgramingSolutionOI1\obj\Debug\ProgramingSolutionOI1.csproj.GenerateResource.cache
+C:\Users\edoro\Desktop\oi-programingSolution\ProgramingSolutionOI1\obj\Debug\ProgramingSolutionOI1.exe
+C:\Users\edoro\Desktop\oi-programingSolution\ProgramingSolutionOI1\obj\Debug\ProgramingSolutionOI1.pdb
+C:\Users\edoro\Desktop\oi-programingSolution\ProgramingSolutionOI1\obj\Debug\ProgramingSolutionOI1.AddMachine.resources
