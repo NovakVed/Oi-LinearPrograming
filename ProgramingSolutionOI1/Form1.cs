@@ -99,7 +99,7 @@ namespace ProgramingSolutionOI1
             }
 
             DataTableProductMachine.Rows.Add("Kapacitet");
-            //DataTableProductMachine.Rows.Add("Ograničenja");
+            DataTableProductMachine.Rows.Add("Ograničenje");
             RefreshTable();
 
             //Disable buttons and dgv
@@ -136,12 +136,13 @@ namespace ProgramingSolutionOI1
         {
             foreach (DataRow row in DataTableProductMachine.Rows)
             {
-                List<int> ListInt = new List<int>();
+                List<string> ListInt = new List<string>();
                 string productName = row.ItemArray[0].ToString();
                 string netIncome = row.ItemArray.Last().ToString();
                 for (int i = 1; i < row.ItemArray.Length - 1; i++)
                 {
-                    if (int.TryParse(row.ItemArray[i].ToString(), out int result))
+                    ListInt.Add(row.ItemArray[i].ToString());
+                    /*if (int.TryParse(row.ItemArray[i].ToString(), out int result))
                     {
                         ListInt.Add(result);
                     }
@@ -149,7 +150,7 @@ namespace ProgramingSolutionOI1
                     {
                         MessageBox.Show("Jedan od unos nije tip int", "Error");
                         return;
-                    }
+                    }*/
                 }
                 productMachine.AddProduct(productName, ListInt, netIncome);
             }
@@ -165,6 +166,12 @@ namespace ProgramingSolutionOI1
             if (CmbTypeOfRevenue.Text.Equals(""))
             {
                 MessageBox.Show("Niste odabrali tip prihoda", "Error");
+                return;
+            }
+
+            if (ProductMachine.originals.Count > 3)
+            {
+                MessageBox.Show("Nemožete napraviti originalni oblik Vam uneseni podaci nisu dobri", "Error");
                 return;
             }
 
@@ -185,6 +192,12 @@ namespace ProgramingSolutionOI1
             if (CmbTypeOfRevenue.Text.Equals(""))
             {
                 MessageBox.Show("Niste odabrali tip prihoda", "Error");
+                return;
+            }
+
+            if (ProductMachine.duals.Count > 3)
+            {
+                MessageBox.Show("Nemožete napraviti dualni oblik Vam uneseni podaci nisu dobri", "Error");
                 return;
             }
 
@@ -224,8 +237,13 @@ namespace ProgramingSolutionOI1
             //Odabrana je originalna metoda
             if (btnPressed == 1)
             {
+                //Ako postoji graf, izbrisi ga
+                if (Chart.Series.Any())
+                {
+                    Chart.Series.Clear();
+                }
                 int counter = 1;
-                productMachine.SetDataForOriginalProblemInListOriginals();
+                //productMachine.SetDataForOriginalProblemInListOriginals();
                 LinearSolver solver = new LinearSolver();
                 foreach (List<int> item in ProductMachine.originals)
                 {
@@ -234,11 +252,32 @@ namespace ProgramingSolutionOI1
                         string lineName = "p" + counter;
                         Chart.Series.Add(lineName);
                         Chart.Series[lineName].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-                        Chart.Series[lineName].Color = Color.Black;
+                        Chart.Series[lineName].Color = Color.Blue;
+                        Chart.Series[lineName].BorderWidth = 2;
 
-                        Chart.Series[lineName].Points.AddXY(solver.FindAxisX(counter), 0);
-                        Chart.Series[lineName].Points.AddXY(0, solver.FindAxisY(counter));
+                        double axisX = solver.FindAxisX(counter);
+                        double axisY = solver.FindAxisY(counter);
 
+                        //TODO: Pitaj kako se rješava crtanje vertikalne linije na grafu
+                        double avarageX = ProductMachine.originals.Average(r => r[1]) * 3;
+                        double avarageY = ProductMachine.originals.Average(r => r[1]) * 3;
+
+                        if (axisX == 0)
+                        {
+                            Chart.Series[lineName].Points.AddXY(0, axisY);
+                            Chart.Series[lineName].Points.AddXY(avarageX, axisY);
+                        }
+                        else if (axisY == 0)
+                        {
+                            Chart.Series[lineName].Points.AddXY(axisX, 0);
+                            Chart.Series[lineName].Points.AddXY(avarageY, axisX);
+                        }
+                        else
+                        {
+                            Chart.Series[lineName].Points.AddXY(axisX, 0);
+                            Chart.Series[lineName].Points.AddXY(0, axisY);
+                        }
+                        
                         counter++;
                     }
                 }
@@ -254,25 +293,29 @@ namespace ProgramingSolutionOI1
                     Chart.Series.Add("Funkcija Cilja");
                     Chart.Series["Funkcija Cilja"].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
                     Chart.Series["Funkcija Cilja"].Color = Color.Green;
+                    Chart.Series["Funkcija Cilja"].BorderWidth = 2;
 
                     Chart.Series["Funkcija Cilja"].Points.AddXY(goalFunctions[0], 0);
                     Chart.Series["Funkcija Cilja"].Points.AddXY(0, goalFunctions[1]);
 
                     List<int> zs = ProductMachine.originals[0];
-                    double z = goalFunctions[0]*zs[0] + goalFunctions[1]*zs[1];
+                    double z = zs[0]*goalFunctions[0] + zs[1]*goalFunctions[1];
 
                     RtxtFormulaResult.Text += "\n\nRezultat funckije cilja: \n";
-                    RtxtFormulaResult.Text += "Z = " + goalFunctions[0]+ "x" + zs[0] + "+" + goalFunctions[1] + "x" + zs[1] + "=" + z;
-                    RtxtFormulaResult.Text += "\nM(" + goalFunctions[0] + ","+ goalFunctions[1] + ")";
+                    RtxtFormulaResult.Text += "Z = " + zs[0] + " x " + goalFunctions[0] + " + " + zs[1] + " x " + goalFunctions[1] + " = " + z;
+                    RtxtFormulaResult.Text += "\nM(" + goalFunctions[0] + ", "+ goalFunctions[1] + ")";
                 }
             }
             //TODO: Uzmi najmanje rjesenje
-            //TODO: Popravi bug koji iskace dok ponovno zelis pokazati graf
             //Odabrana je dualna metoda
             else
             {
+                //Ako postoji graf izbrisi ga
+                if (Chart.Series.Any())
+                {
+                    Chart.Series.Clear();
+                }
                 int counter = 1;
-                productMachine.SetDataForDualProblemInListDuals();
                 LinearSolver solver = new LinearSolver();
                 foreach (List<int> item in ProductMachine.duals)
                 {
@@ -309,11 +352,10 @@ namespace ProgramingSolutionOI1
                     double z = goalFunctions[0] * zs[0] + goalFunctions[1] * zs[1];
 
                     RtxtFormulaResult.Text += "\n\nRezultat funckije cilja: \n";
-                    RtxtFormulaResult.Text += "Z = " + goalFunctions[0] + "x" + zs[0] + "+" + goalFunctions[1] + "x" + zs[1] + "=" + z;
-                    RtxtFormulaResult.Text += "\nM(" + goalFunctions[0] + "," + goalFunctions[1] + ")";
+                    RtxtFormulaResult.Text += "Z = " + goalFunctions[0] + " x " + zs[0] + " + " + goalFunctions[1] + " x " + zs[1] + " = " + z;
+                    RtxtFormulaResult.Text += "\nM(" + goalFunctions[0] + ", " + goalFunctions[1] + ")";
                 }
             }
-            
         }
     }
 }

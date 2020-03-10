@@ -9,10 +9,10 @@ namespace ProgramingSolutionOI1
     class Product
     {
         public string ProductName { get; set; }
-        public List<int> MachineValues { get; set; }
+        public List<string> MachineValues { get; set; }
         //TODO change NetIncome to int
         public string NetIncome { get; set; }
-        public Product(string productName, List<int> values, string netIncome)
+        public Product(string productName, List<string> values, string netIncome)
         {
             ProductName = productName;
             MachineValues = values;

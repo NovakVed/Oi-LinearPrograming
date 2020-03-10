@@ -14,9 +14,6 @@ namespace ProgramingSolutionOI1
         public List<Product> products = new List<Product>();
         public List<int> capacityValues = new List<int>();
 
-        //test
-        List<List<int>> listMaxs = new List<List<int>>();
-
         public void InputNewMachine(Machine machine)
         {
             machines.Add(machine);
@@ -28,7 +25,7 @@ namespace ProgramingSolutionOI1
             machines.Remove(itemToRemove);
         }
 
-        public void AddProduct(string productName, List<int> MachinesValues, string netIncome)
+        public void AddProduct(string productName, List<string> MachinesValues, string netIncome)
         {
             Product product = new Product(productName, MachinesValues, netIncome);
             products.Add(product);
@@ -37,7 +34,7 @@ namespace ProgramingSolutionOI1
         public void AddDataToCapacityValues()
         {
             Product machineValues = products.Single(r => r.ProductName.Equals("Kapacitet"));
-            capacityValues = machineValues.MachineValues.ToList();
+            capacityValues = machineValues.MachineValues.Select(int.Parse).ToList();
         }
 
         //TODO: Ubaci za problem min
@@ -60,133 +57,73 @@ namespace ProgramingSolutionOI1
 
         public string GetStringForOriginalProblemForMax()
         {
+            //Izbrisi sve podatke iz liste originals
+            originals.Clear();
+
+            //Upiši podatke u liste originals
+            SetDataForOriginalProblemInListOriginals();
+            
             string z = " Z = ";
             int counter = 1;
 
-            foreach (Product item in products)
+            //Z = ... funkcija
+            for (int i = 0; i < originals[0].Count - 1; i++)
             {
-                if (item.ProductName.Equals("Kapacitet"))
+                z += originals[0][i] + "x" + counter + " + ";
+                counter++;
+            }
+            z += originals[0][counter - 1] + "x" + counter + " --> max \n";
+
+            //Ispis svih ograničenja
+            foreach (var item in originals)
+            {
+                int index = originals.IndexOf(item);
+                if (index != 0)
                 {
-                    z += " --> max \n";
-                }
-                else
-                {
-                    if (item.Equals(products.Last()))
-                    {
-                        z += item.NetIncome + "x" + counter;
-                    }
-                    else
-                    {
-                        z += item.NetIncome + "x" + counter + " + ";
-                        counter++;
-                    }
+                    int A = item[0];
+                    int B = item[1];
+                    int C = item[2];
+                    z += A + "x1" + " + " + B + "x2" + " ≤ " + C + "\n";
                 }
             }
 
-            counter = 1;
-
-            
-            //If list already exists then do nothing
-            if (!listMaxs.Any())
-            {
-                foreach (Product item in products)
-                {
-                    if (item.ProductName.Equals("Kapacitet") == false)
-                    {
-                        listMaxs.Add(item.MachineValues);
-                    }
-                }
-            }
-
-            int indexer = 0;
-            //TODO: Fix bug that works only if you have the same pair of products and machines
-            for (int i = 0; i < products.Count - 1; i++)
-            {
-                foreach (List<int> item in listMaxs)
-                {
-                    if (indexer < listMaxs.Count)
-                    {
-                        z += item[indexer].ToString() + "x" + counter + " + ";
-                        counter++;
-                    }
-                }
-                z += " ≤ " + capacityValues[indexer] + "\n";
-                indexer++;
-                counter = 1;
-            }
-
-            //Ograničenja
-            for (int i = 1; i <= capacityValues.Count; i++)
-            {
-                if (i == capacityValues.Count)
-                {
-                    z += "x" + i + " ≥ 0 -> uvjet nenegativnosti";
-                }
-                else
-                {
-                    z += "x" + i + ", ";
-                }
-            }
+            z += "x1,x2 ≥ 0 --> uvjet nenegativnosti";
 
             return z;
         }
 
         public string GetStringForDualProblemForMax()
         {
-            string z = " Z = ";
+            //Izbrisi sve podatke iz liste originals
+            duals.Clear();
 
+            //Upiši podatke u liste duals
+            SetDataForDualProblemInListDuals();
+            string z = " Z = ";
             int counter = 1;
 
-            if (!capacityValues.Any())
+            //Z = ... funkcija
+            for (int i = 0; i < duals[0].Count - 1; i++)
             {
-                AddDataToCapacityValues();
+                z += duals[0][i] + "y" + counter + " + ";
+                counter++;
+            }
+            z += duals[0][counter - 1] + "y" + counter + " --> min \n";
+
+            //Ispis svih ograničenja
+            foreach (var item in duals)
+            {
+                int index = duals.IndexOf(item);
+                if (index != 0)
+                {
+                    int A = item[0];
+                    int B = item[1];
+                    int C = item[2];
+                    z += A + "y1" + " + " + B + "y2" + " ≥ " + C + "\n";
+                }
             }
 
-            foreach (int machineValue in capacityValues)
-            {
-                if (counter == capacityValues.Count)
-                {
-                    z += machineValue + "y" + counter;
-                    z += " --> min \n";
-                }
-                else
-                {
-                    z += machineValue + "y" + counter + " + ";
-                    counter++;
-                }
-            }
-
-            counter = 1;
-            int capacityCounter = 1;
-
-            foreach (Product item in products)
-            {
-                if (item.ProductName.Equals("Kapacitet") == false)
-                {
-                    foreach (int machineValueOfProduct in item.MachineValues)
-                    {
-                        if (machineValueOfProduct.Equals(item.MachineValues.Last()))
-                        {
-                            z += machineValueOfProduct + "y" + counter + " ≥ " + item.NetIncome + "\n";
-                            counter = 1;
-                        }
-                        else
-                        {
-                            z += machineValueOfProduct + "y" + counter + " + ";
-                            capacityCounter++;
-                            counter++;
-                        }
-                    }
-                }
-                else
-                {
-                    for (int i = 1; i <= item.MachineValues.Count; i++)
-                    {
-                        z += "y" + i + ", ";
-                    }
-                    z += " ≥ 0 -> uvjet nenegativnosti";
-                }
-            }
+            z += "y1,y2 ≥ 0 --> uvjet nenegativnosti";
 
             return z;
         }
@@ -197,9 +134,10 @@ namespace ProgramingSolutionOI1
             List<int> dataNetWorth = new List<int>();
             foreach (Product item in products)
             {
-                if (item.ProductName.Equals("Kapacitet"))
+                if (item.ProductName.Equals("Kapacitet") || item.ProductName.Equals("Ograničenje"))
                 {
                     originals.Add(dataNetWorth);
+                    break;
                 }
                 else
                 {
@@ -209,19 +147,21 @@ namespace ProgramingSolutionOI1
 
             //Postavljanje ostalih varijabla redom u listu
             Product machineValuesForOriginal = products.Single(r => r.ProductName.Equals("Kapacitet"));
-            List<int> capacityValuesForOriginals = machineValuesForOriginal.MachineValues.ToList();
+            List<int> capacityValuesForOriginals = machineValuesForOriginal.MachineValues.Select(int.Parse).ToList();
+
+            Product product = products[2];
 
             int indexer = 0;
-            for (int i = 0; i < products.Count - 1; i++)
+            for (int i = 0; i < product.MachineValues.Count; i++)
             {
                 List<int> temps = new List<int>();
                 foreach (var item in products)
                 {
-                    if (item.ProductName.Equals("Kapacitet") == false)
+                    if (item.ProductName.Equals("Kapacitet") == false && item.ProductName.Equals("Ograničenje") == false)
                     {
                         if (indexer < item.MachineValues.Count)
                         {
-                            temps.Add(item.MachineValues[indexer]);
+                            temps.Add(int.Parse(item.MachineValues[indexer]));
                         }
                     }
                 }
@@ -235,18 +175,18 @@ namespace ProgramingSolutionOI1
         {
             //Funkcija cilja (Z = ) u prvom redu liste
             Product machineValuesForDual = products.Single(r => r.ProductName.Equals("Kapacitet"));
-            duals.Add(machineValuesForDual.MachineValues.ToList());
+            duals.Add(machineValuesForDual.MachineValues.Select(int.Parse).ToList());
 
             //Postavljanje ostalih varijabla redom u listu
             foreach (Product item in products)
             {
-                if (item.ProductName.Equals("Kapacitet"))
+                if (item.ProductName.Equals("Kapacitet") || item.ProductName.Equals("Ograničenje"))
                 {
                     return;
                 }
 
                 List<int> temps = new List<int>();
-                foreach (int var in item.MachineValues)
+                foreach (int var in item.MachineValues.Select(int.Parse).ToList())
                 {
                     temps.Add(var);
                 }

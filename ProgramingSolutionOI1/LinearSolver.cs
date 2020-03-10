@@ -13,6 +13,13 @@ namespace ProgramingSolutionOI1
             List<int> lists = ProductMachine.originals[index];
             double a = lists[2];
             double b = lists[0];
+            //TOOD: popravi bug
+            //Ako je varijabla jednaka 0 vrati a
+            if (a == 0 || b == 0)
+            {
+                return 0;
+            }
+
             double result = a / b;
             return result;
         }
@@ -22,6 +29,12 @@ namespace ProgramingSolutionOI1
             List<int> lists = ProductMachine.originals[index];
             double a = lists[2];
             double b = lists[1];
+
+            if (a == 0 || b == 0)
+            {
+                return 0;
+            }
+
             double result = a / b;
             return result;
         }
@@ -31,6 +44,17 @@ namespace ProgramingSolutionOI1
             List<int> lists = ProductMachine.duals[index];
             double a = lists[2];
             double b = lists[0];
+
+            if (b == 0)
+            {
+                return a;
+            }
+
+            if (a == 0 && b == 0)
+            {
+                return 0;
+            }
+
             double result = a / b;
             return result;
         }
@@ -40,14 +64,36 @@ namespace ProgramingSolutionOI1
             List<int> lists = ProductMachine.duals[index];
             double a = lists[2];
             double b = lists[1];
+
+            if (b == 0)
+            {
+                return a;
+            }
+
+            if (a == 0 && b == 0)
+            {
+                return 0;
+            }
+
             double result = a / b;
             return result;
         }
 
         public List<double> FindGoalFunctionOriginals()
         {
-            List<double> results = FindAllLine_LineIntersections_Originals();
-
+            List<double> results = new List<double>();
+            double goalsFunction = 0;
+            foreach (var item in FindAllLine_LineIntersections_Originals())
+            {
+                List<int> goalsListFunctions = ProductMachine.originals[0];
+                double temp = double.Parse(goalsListFunctions[0].ToString()) * item[0] + double.Parse(goalsListFunctions[1].ToString()) * item[1];
+                if (temp > goalsFunction)
+                {
+                    goalsFunction = temp;
+                    results.Clear();
+                    results = item;
+                }
+            }
             return results;
         }
 
@@ -58,9 +104,9 @@ namespace ProgramingSolutionOI1
             return results;
         }
 
-        public List<double> FindAllLine_LineIntersections_Originals()
+        public List<List<double>> FindAllLine_LineIntersections_Originals()
         {
-            List<double> results = new List<double>();
+            List<List<double>> allLines = new List<List<double>>();
             foreach (var item in ProductMachine.originals)
             {
                 int index = ProductMachine.originals.IndexOf(item);
@@ -89,10 +135,15 @@ namespace ProgramingSolutionOI1
 
                                 if (x >= 0 || y >= 0)
                                 {
-                                    if (results.Contains(x) == false && results.Contains(y) == false)
+                                    List<double> itemResults = new List<double>
                                     {
-                                        results.Add(x);
-                                        results.Add(y);
+                                        x,
+                                        y
+                                    };
+                                    //TODO: bug, ne provjerava dali vec postoji ista lista u listi
+                                    if (allLines.Contains(itemResults) == false)
+                                    {
+                                        allLines.Add(itemResults);
                                     }
                                 }
                             }
@@ -100,7 +151,7 @@ namespace ProgramingSolutionOI1
                     }
                 }
             }
-            return results;
+            return allLines;
         }
 
         public List<double> FindAllLine_LineIntersections_Duals()
