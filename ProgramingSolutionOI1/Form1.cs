@@ -270,7 +270,7 @@ namespace ProgramingSolutionOI1
                         else if (axisY == 0)
                         {
                             Chart.Series[lineName].Points.AddXY(axisX, 0);
-                            Chart.Series[lineName].Points.AddXY(avarageY, axisX);
+                            Chart.Series[lineName].Points.AddXY(axisX, avarageY);
                         }
                         else
                         {
@@ -283,6 +283,7 @@ namespace ProgramingSolutionOI1
                 }
 
                 List<double> goalFunctions = solver.FindGoalFunctionOriginals();
+                //TODO: dodaj točku funkcije cilja na graf
                 //Ako je lista prazna znači da ne postoji funkciju cilja
                 if (!goalFunctions.Any())
                 {
@@ -297,6 +298,15 @@ namespace ProgramingSolutionOI1
 
                     Chart.Series["Funkcija Cilja"].Points.AddXY(goalFunctions[0], 0);
                     Chart.Series["Funkcija Cilja"].Points.AddXY(0, goalFunctions[1]);
+
+                    Chart.Series.Add("Točka Funkcije Cilja");
+                    Chart.Series["Točka Funkcije Cilja"].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Point;
+                    Chart.Series["Točka Funkcije Cilja"].Color = Color.Red;
+                    Chart.Series["Točka Funkcije Cilja"].BorderWidth = 3;
+                    Chart.Series["Točka Funkcije Cilja"].Points.AddXY(goalFunctions[0], goalFunctions[1]);
+                    Chart.Series["Točka Funkcije Cilja"].LegendText = "Točka Funkcije Cilja: \n" + "M(" +goalFunctions[0] + ", "+ goalFunctions[1] + ")";
+                    Chart.Series["Točka Funkcije Cilja"].Label = "M(" +goalFunctions[0] + ", "+ goalFunctions[1] + ")";
+                    Chart.Series["Točka Funkcije Cilja"].ToolTip = "M(" +goalFunctions[0] + ", "+ goalFunctions[1] + ")";
 
                     List<int> zs = ProductMachine.originals[0];
                     double z = zs[0]*goalFunctions[0] + zs[1]*goalFunctions[1];

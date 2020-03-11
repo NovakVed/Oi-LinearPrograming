@@ -13,7 +13,7 @@ namespace ProgramingSolutionOI1
             List<int> lists = ProductMachine.originals[index];
             double a = lists[2];
             double b = lists[0];
-            //TOOD: popravi bug
+
             //Ako je varijabla jednaka 0 vrati a
             if (a == 0 || b == 0)
             {
@@ -140,8 +140,8 @@ namespace ProgramingSolutionOI1
                                         x,
                                         y
                                     };
-                                    //TODO: bug, ne provjerava dali vec postoji ista lista u listi
-                                    if (allLines.Contains(itemResults) == false)
+
+                                    if (ContainsList(allLines, itemResults) == false)
                                     {
                                         allLines.Add(itemResults);
                                     }
@@ -152,6 +152,19 @@ namespace ProgramingSolutionOI1
                 }
             }
             return allLines;
+        }
+
+        //Provjeri dali se ponavljaju elementi u listi (ako postoji lista unutar liste)
+        public bool ContainsList(List<List<double>> listsLists, List<double> lists )
+        {
+            foreach (var item in listsLists)
+            {
+                if (lists.SequenceEqual(item))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         public List<double> FindAllLine_LineIntersections_Duals()
