@@ -85,13 +85,16 @@ namespace ProgramingSolutionOI1
             double goalsFunction = 0;
             foreach (var item in FindAllLine_LineIntersections_Originals())
             {
-                List<int> goalsListFunctions = ProductMachine.originals[0];
-                double temp = double.Parse(goalsListFunctions[0].ToString()) * item[0] + double.Parse(goalsListFunctions[1].ToString()) * item[1];
-                if (temp > goalsFunction)
-                { 
-                    goalsFunction = temp;
-                    results.Clear();
-                    results = item;
+                if (CheckLimitations(item) == true)
+                {
+                    List<int> goalsListFunctions = ProductMachine.originals[0];
+                    double temp = double.Parse(goalsListFunctions[0].ToString()) * item[0] + double.Parse(goalsListFunctions[1].ToString()) * item[1];
+                    if (temp > goalsFunction)
+                    {
+                        goalsFunction = temp;
+                        results.Clear();
+                        results = item;
+                    }
                 }
             }
             return results;
@@ -166,6 +169,55 @@ namespace ProgramingSolutionOI1
             }
             return false;
         }
+
+        public bool CheckLimitations(List<double> linesIntersectionPoints)
+        {
+            List<int> goalsListFunctions = ProductMachine.originals[0];
+            ProductMachine productMachine = new ProductMachine();
+            //TODO!
+            if (productMachine.MachineValues.Last().Equals("<="))
+            {
+                double temp = double.Parse(goalsListFunctions[0].ToString()) * linesIntersectionPoints[0] + double.Parse(goalsListFunctions[1].ToString()) * linesIntersectionPoints[1];
+                if (temp <= int.Parse(productMachine.MachineValues.Skip(productMachine.MachineValues.Count() - 2).First()))
+                {
+                    return true;
+                }
+            }
+            else if (productMachine.MachineValues.Last().Equals(">="))
+            {
+                double temp = double.Parse(goalsListFunctions[0].ToString()) * linesIntersectionPoints[0] + double.Parse(goalsListFunctions[1].ToString()) * linesIntersectionPoints[1];
+                if (temp >= int.Parse(productMachine.MachineValues.Skip(productMachine.MachineValues.Count() - 2).First()))
+                {
+                    return true;
+                }
+            }
+            else if (productMachine.MachineValues.Last().Equals("="))
+            {
+                double temp = double.Parse(goalsListFunctions[0].ToString()) * linesIntersectionPoints[0] + double.Parse(goalsListFunctions[1].ToString()) * linesIntersectionPoints[1];
+                if (temp == int.Parse(productMachine.MachineValues.Skip(productMachine.MachineValues.Count() - 2).First()))
+                {
+                    return true;
+                }
+            }
+            else if (productMachine.MachineValues.Last().Equals(">"))
+            {
+                double temp = double.Parse(goalsListFunctions[0].ToString()) * linesIntersectionPoints[0] + double.Parse(goalsListFunctions[1].ToString()) * linesIntersectionPoints[1];
+                if (temp > int.Parse(productMachine.MachineValues.Skip(productMachine.MachineValues.Count() - 2).First()))
+                {
+                    return true;
+                }
+            }
+            else if (productMachine.MachineValues.Last().Equals("<"))
+            {
+                double temp = double.Parse(goalsListFunctions[0].ToString()) * linesIntersectionPoints[0] + double.Parse(goalsListFunctions[1].ToString()) * linesIntersectionPoints[1];
+                if (temp < int.Parse(productMachine.MachineValues.Skip(productMachine.MachineValues.Count() - 2).First()))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         //TODO
         public List<double> FindAllLine_LineIntersections_Duals()
         {
