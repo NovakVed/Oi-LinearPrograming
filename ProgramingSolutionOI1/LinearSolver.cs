@@ -88,7 +88,7 @@ namespace ProgramingSolutionOI1
                 List<int> goalsListFunctions = ProductMachine.originals[0];
                 double temp = double.Parse(goalsListFunctions[0].ToString()) * item[0] + double.Parse(goalsListFunctions[1].ToString()) * item[1];
                 if (temp > goalsFunction)
-                {
+                { 
                     goalsFunction = temp;
                     results.Clear();
                     results = item;
@@ -96,7 +96,7 @@ namespace ProgramingSolutionOI1
             }
             return results;
         }
-
+        //TODO
         public List<double> FindGoalFunctionDuals()
         {
             List<double> results = FindAllLine_LineIntersections_Duals();
@@ -106,7 +106,7 @@ namespace ProgramingSolutionOI1
 
         public List<List<double>> FindAllLine_LineIntersections_Originals()
         {
-            List<List<double>> allLines = new List<List<double>>();
+            List<List<double>> linesIntersectionPoints = new List<List<double>>();
             foreach (var item in ProductMachine.originals)
             {
                 int index = ProductMachine.originals.IndexOf(item);
@@ -132,7 +132,7 @@ namespace ProgramingSolutionOI1
                             {
                                 double x = (B2 * C1 - B1 * C2) / det;
                                 double y = (A1 * C2 - A2 * C1) / det;
-
+                                //TODO: bug ako postoji jedna varijabla manja od 0, ako je druga veca trebalo bi ispisivati pravac
                                 if (x >= 0 || y >= 0)
                                 {
                                     List<double> itemResults = new List<double>
@@ -141,9 +141,9 @@ namespace ProgramingSolutionOI1
                                         y
                                     };
 
-                                    if (ContainsList(allLines, itemResults) == false)
+                                    if (ContainsList(linesIntersectionPoints, itemResults) == false)
                                     {
-                                        allLines.Add(itemResults);
+                                        linesIntersectionPoints.Add(itemResults);
                                     }
                                 }
                             }
@@ -151,7 +151,7 @@ namespace ProgramingSolutionOI1
                     }
                 }
             }
-            return allLines;
+            return linesIntersectionPoints;
         }
 
         //Provjeri dali se ponavljaju elementi u listi (ako postoji lista unutar liste)
@@ -166,7 +166,7 @@ namespace ProgramingSolutionOI1
             }
             return false;
         }
-
+        //TODO
         public List<double> FindAllLine_LineIntersections_Duals()
         {
             List<double> results = new List<double>();

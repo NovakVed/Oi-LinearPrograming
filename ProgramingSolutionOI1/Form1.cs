@@ -283,7 +283,6 @@ namespace ProgramingSolutionOI1
                 }
 
                 List<double> goalFunctions = solver.FindGoalFunctionOriginals();
-                //TODO: dodaj točku funkcije cilja na graf
                 //Ako je lista prazna znači da ne postoji funkciju cilja
                 if (!goalFunctions.Any())
                 {
@@ -317,6 +316,7 @@ namespace ProgramingSolutionOI1
                 }
             }
             //TODO: Uzmi najmanje rjesenje
+            //TODO
             //Odabrana je dualna metoda
             else
             {
