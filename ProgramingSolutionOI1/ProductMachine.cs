@@ -11,6 +11,7 @@ namespace ProgramingSolutionOI1
         public static List<List<int>> originals = new List<List<int>>();
         public static List<List<int>> duals = new List<List<int>>();
         public static List<Machine> machines = new List<Machine>();
+        public static List<Product> productsLinearSolver = new List<Product>();
         public List<Product> products = new List<Product>();
         public List<int> capacityValues = new List<int>();
 
@@ -29,6 +30,7 @@ namespace ProgramingSolutionOI1
         {
             Product product = new Product(productName, MachinesValues, netIncome);
             products.Add(product);
+            productsLinearSolver.Add(product);
         }
 
         public void AddDataToCapacityValues()

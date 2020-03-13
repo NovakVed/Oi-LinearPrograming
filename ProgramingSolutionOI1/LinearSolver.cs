@@ -83,13 +83,18 @@ namespace ProgramingSolutionOI1
         {
             List<double> results = new List<double>();
             double goalsFunction = 0;
+            double tempTemp = 0;
             foreach (var item in FindAllLine_LineIntersections_Originals())
             {
                 if (CheckLimitations(item) == true)
                 {
                     List<int> goalsListFunctions = ProductMachine.originals[0];
+                    if (results.Any())
+                    {
+                        tempTemp = double.Parse(goalsListFunctions[0].ToString()) * results[0] + double.Parse(goalsListFunctions[1].ToString()) * results[1];
+                    }
                     double temp = double.Parse(goalsListFunctions[0].ToString()) * item[0] + double.Parse(goalsListFunctions[1].ToString()) * item[1];
-                    if (temp > goalsFunction)
+                    if (temp > tempTemp)
                     {
                         goalsFunction = temp;
                         results.Clear();
@@ -106,7 +111,7 @@ namespace ProgramingSolutionOI1
 
             return results;
         }
-
+        //TOOD: ubaci točke sjecišta sa grafom
         public List<List<double>> FindAllLine_LineIntersections_Originals()
         {
             List<List<double>> linesIntersectionPoints = new List<List<double>>();
@@ -173,49 +178,77 @@ namespace ProgramingSolutionOI1
         public bool CheckLimitations(List<double> linesIntersectionPoints)
         {
             List<int> goalsListFunctions = ProductMachine.originals[0];
-            ProductMachine productMachine = new ProductMachine();
-            //TODO!
-            if (productMachine.MachineValues.Last().Equals("<="))
+            Product machineValuesForOriginal = ProductMachine.productsLinearSolver.Single(r => r.ProductName.Equals("Kapacitet"));
+            Product limitationsProduct = ProductMachine.productsLinearSolver.Single(r => r.ProductName.Equals("Ograničenje"));
+            int counter = 0;
+            int counterInsideOriginals = 1;
+            bool correct = false;
+            foreach (var item in limitationsProduct.MachineValues)
             {
-                double temp = double.Parse(goalsListFunctions[0].ToString()) * linesIntersectionPoints[0] + double.Parse(goalsListFunctions[1].ToString()) * linesIntersectionPoints[1];
-                if (temp <= int.Parse(productMachine.MachineValues.Skip(productMachine.MachineValues.Count() - 2).First()))
+                if (item == "<=")
                 {
-                    return true;
+                    double temp = double.Parse(ProductMachine.originals[counterInsideOriginals][0].ToString()) * linesIntersectionPoints[0] + double.Parse(ProductMachine.originals[counterInsideOriginals][1].ToString()) * linesIntersectionPoints[1];
+                    if (temp <= int.Parse(machineValuesForOriginal.MachineValues[counter]))
+                    {
+                        correct = true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
                 }
-            }
-            else if (productMachine.MachineValues.Last().Equals(">="))
-            {
-                double temp = double.Parse(goalsListFunctions[0].ToString()) * linesIntersectionPoints[0] + double.Parse(goalsListFunctions[1].ToString()) * linesIntersectionPoints[1];
-                if (temp >= int.Parse(productMachine.MachineValues.Skip(productMachine.MachineValues.Count() - 2).First()))
+                else if (item.Equals(">="))
                 {
-                    return true;
+                    double temp = double.Parse(ProductMachine.originals[counterInsideOriginals][0].ToString()) * linesIntersectionPoints[0] + double.Parse(ProductMachine.originals[counterInsideOriginals][1].ToString()) * linesIntersectionPoints[1];
+                    if (temp >= int.Parse(machineValuesForOriginal.MachineValues[counter]))
+                    {
+                        correct = true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
                 }
-            }
-            else if (productMachine.MachineValues.Last().Equals("="))
-            {
-                double temp = double.Parse(goalsListFunctions[0].ToString()) * linesIntersectionPoints[0] + double.Parse(goalsListFunctions[1].ToString()) * linesIntersectionPoints[1];
-                if (temp == int.Parse(productMachine.MachineValues.Skip(productMachine.MachineValues.Count() - 2).First()))
+                else if (item.Equals("="))
                 {
-                    return true;
+                    double temp = double.Parse(ProductMachine.originals[counterInsideOriginals][0].ToString()) * linesIntersectionPoints[0] + double.Parse(ProductMachine.originals[counterInsideOriginals][1].ToString()) * linesIntersectionPoints[1];
+                    if (temp == int.Parse(machineValuesForOriginal.MachineValues[counter]))
+                    {
+                        correct = true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
                 }
-            }
-            else if (productMachine.MachineValues.Last().Equals(">"))
-            {
-                double temp = double.Parse(goalsListFunctions[0].ToString()) * linesIntersectionPoints[0] + double.Parse(goalsListFunctions[1].ToString()) * linesIntersectionPoints[1];
-                if (temp > int.Parse(productMachine.MachineValues.Skip(productMachine.MachineValues.Count() - 2).First()))
+                else if (item.Equals(">"))
                 {
-                    return true;
+                    double temp = double.Parse(ProductMachine.originals[counterInsideOriginals][0].ToString()) * linesIntersectionPoints[0] + double.Parse(ProductMachine.originals[counterInsideOriginals][1].ToString()) * linesIntersectionPoints[1];
+                    if (temp > int.Parse(machineValuesForOriginal.MachineValues[counter]))
+                    {
+                        correct = true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
                 }
-            }
-            else if (productMachine.MachineValues.Last().Equals("<"))
-            {
-                double temp = double.Parse(goalsListFunctions[0].ToString()) * linesIntersectionPoints[0] + double.Parse(goalsListFunctions[1].ToString()) * linesIntersectionPoints[1];
-                if (temp < int.Parse(productMachine.MachineValues.Skip(productMachine.MachineValues.Count() - 2).First()))
+                else if (item.Equals("<"))
                 {
-                    return true;
+                    double temp = double.Parse(ProductMachine.originals[counterInsideOriginals][0].ToString()) * linesIntersectionPoints[0] + double.Parse(ProductMachine.originals[counterInsideOriginals][1].ToString()) * linesIntersectionPoints[1];
+                    if (temp < int.Parse(machineValuesForOriginal.MachineValues[counter]))
+                    {
+                        correct = true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
                 }
+                counter++;
+                counterInsideOriginals++;
             }
-            return false;
+            return correct;
         }
 
         //TODO
