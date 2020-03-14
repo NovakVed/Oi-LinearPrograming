@@ -90,10 +90,53 @@ namespace ProgramingSolutionOI1
                     }
                 }
             }
+
+            int counter = 0;
+            foreach (var item in ProductMachine.originals)
+            {
+                if (item.Count != 2)
+                {
+                    List<double> newListX = new List<double>();
+                    newListX.Add(FindAxisX(counter));
+                    newListX.Add(0);
+                    List<double> newListY = new List<double>();
+                    newListY.Add(0);
+                    newListY.Add(FindAxisY(counter));
+                    if (CheckLimitations(newListX) == true)
+                    {
+                        List<int> goalsListFunctions = ProductMachine.originals[0];
+                        if (results.Any())
+                        {
+                            tempTemp = double.Parse(goalsListFunctions[0].ToString()) * results[0] + double.Parse(goalsListFunctions[1].ToString()) * results[1];
+                        }
+                        double temp = double.Parse(goalsListFunctions[0].ToString()) * newListX[0] + double.Parse(goalsListFunctions[1].ToString()) * newListX[1];
+                        if (temp > tempTemp)
+                        {
+                            results.Clear();
+                            results = newListX;
+                        }
+                    }
+                    if (CheckLimitations(newListY) == true)
+                    {
+                        List<int> goalsListFunctions = ProductMachine.originals[0];
+                        if (results.Any())
+                        {
+                            tempTemp = double.Parse(goalsListFunctions[0].ToString()) * results[0] + double.Parse(goalsListFunctions[1].ToString()) * results[1];
+                        }
+                        double temp = double.Parse(goalsListFunctions[0].ToString()) * newListY[0] + double.Parse(goalsListFunctions[1].ToString()) * newListY[1];
+                        if (temp > tempTemp)
+                        {
+                            results.Clear();
+                            results = newListX;
+                        }
+                    }
+                }
+                counter++;
+            }
+
             return results;
         }
 
-        //TODO
         public List<double> FindGoalFunctionDuals()
         {
             List<double> results = new List<double>();
@@ -108,12 +151,62 @@ namespace ProgramingSolutionOI1
                         tempTemp = double.Parse(goalsListFunctions[0].ToString()) * results[0] + double.Parse(goalsListFunctions[1].ToString()) * results[1];
                     }
                     double temp = double.Parse(goalsListFunctions[0].ToString()) * item[0] + double.Parse(goalsListFunctions[1].ToString()) * item[1];
-                    if (temp > tempTemp)
+                    if (tempTemp != 0)
                     {
-                        results.Clear();
+                        if (temp < tempTemp)
+                        {
+                            results.Clear();
+                            results = item;
+                        }
+                    }
+                    else
+                    {
                         results = item;
                     }
                 }
+            }
+
+            int counter = 0;
+            foreach (var item in ProductMachine.duals)
+            {
+                if (item.Count != 2)
+                {
+                    List<double> newListX = new List<double>();
+                    newListX.Add(FindAxisXDual(counter));
+                    newListX.Add(0);
+                    List<double> newListY = new List<double>();
+                    newListY.Add(0);
+                    newListY.Add(FindAxisYDual(counter));
+                    if (CheckLimitationsDuals(newListX) == true)
+                    {
+                        List<int> goalsListFunctions = ProductMachine.duals[0];
+                        if (results.Any())
+                        {
+                            tempTemp = double.Parse(goalsListFunctions[0].ToString()) * results[0] + double.Parse(goalsListFunctions[1].ToString()) * results[1];
+                        }
+                        double temp = double.Parse(goalsListFunctions[0].ToString()) * newListX[0] + double.Parse(goalsListFunctions[1].ToString()) * newListX[1];
+                        if (temp < tempTemp)
+                        {
+                            results.Clear();
+                            results = newListX;
+                        }
+                    }
+                    if (CheckLimitationsDuals(newListY) == true)
+                    {
+                        List<int> goalsListFunctions = ProductMachine.duals[0];
+                        if (results.Any())
+                        {
+                            tempTemp = double.Parse(goalsListFunctions[0].ToString()) * results[0] + double.Parse(goalsListFunctions[1].ToString()) * results[1];
+                        }
+                        double temp = double.Parse(goalsListFunctions[0].ToString()) * newListY[0] + double.Parse(goalsListFunctions[1].ToString()) * newListY[1];
+                        if (temp < tempTemp)
+                        {
+                            results.Clear();
+                            results = newListY;
+                        }
+                    }
+                }
+                counter++;
             }
             return results;
         }
@@ -147,7 +240,6 @@ namespace ProgramingSolutionOI1
                             {
                                 double x = (B2 * C1 - B1 * C2) / det;
                                 double y = (A1 * C2 - A2 * C1) / det;
-                                //TODO: bug ako postoji jedna varijabla manja od 0, ako je druga veca trebalo bi ispisivati pravac
                                 if (x >= 0 || y >= 0)
                                 {
                                     List<double> itemResults = new List<double>
@@ -258,7 +350,6 @@ namespace ProgramingSolutionOI1
             return correct;
         }
 
-        //TODO
         public List<List<double>> FindAllLine_LineIntersections_Duals()
         {
             List<List<double>> linesIntersectionPoints = new List<List<double>>();
@@ -287,7 +378,6 @@ namespace ProgramingSolutionOI1
                             {
                                 double x = (B2 * C1 - B1 * C2) / det;
                                 double y = (A1 * C2 - A2 * C1) / det;
-                                //TODO: bug ako postoji jedna varijabla manja od 0, ako je druga veca trebalo bi ispisivati pravac
                                 if (x >= 0 || y >= 0)
                                 {
                                     List<double> itemResults = new List<double>
