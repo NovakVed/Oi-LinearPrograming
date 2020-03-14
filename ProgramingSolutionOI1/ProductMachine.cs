@@ -76,6 +76,8 @@ namespace ProgramingSolutionOI1
             }
             z += originals[0][counter - 1] + "x" + counter + " --> max \n";
 
+            int limitationCounter = 0;
+
             //Ispis svih ograničenja
             foreach (var item in originals)
             {
@@ -85,7 +87,30 @@ namespace ProgramingSolutionOI1
                     int A = item[0];
                     int B = item[1];
                     int C = item[2];
-                    z += A + "x1" + " + " + B + "x2" + " ≤ " + C + "\n";
+
+                    Product limitationsProduct = ProductMachine.productsLinearSolver.Single(r => r.ProductName.Equals("Ograničenje"));
+                    if (limitationsProduct.MachineValues[limitationCounter].Equals("<="))
+                    {
+                        z += A + "x1" + " + " + B + "x2" + " ≤ " + C + "\n";
+
+                    }
+                    else if (limitationsProduct.MachineValues[limitationCounter].Equals(">="))
+                    {
+                        z += A + "x1" + " + " + B + "x2" + " ≥ " + C + "\n";
+                    }
+                    else if (limitationsProduct.MachineValues[limitationCounter].Equals("<"))
+                    {
+                        z += A + "x1" + " + " + B + "x2" + " < " + C + "\n";
+                    }
+                    else if (limitationsProduct.MachineValues[limitationCounter].Equals(">"))
+                    {
+                        z += A + "x1" + " + " + B + "x2" + " > " + C + "\n";
+                    }
+                    else
+                    {
+                        z += A + "x1" + " + " + B + "x2" + " = " + C + "\n";
+                    }
+                    limitationCounter++;
                 }
             }
 
@@ -112,6 +137,7 @@ namespace ProgramingSolutionOI1
             }
             z += duals[0][counter - 1] + "y" + counter + " --> min \n";
 
+            int limitationCounter = 0;
             //Ispis svih ograničenja
             foreach (var item in duals)
             {
@@ -121,7 +147,29 @@ namespace ProgramingSolutionOI1
                     int A = item[0];
                     int B = item[1];
                     int C = item[2];
-                    z += A + "y1" + " + " + B + "y2" + " ≥ " + C + "\n";
+
+                    Product limitationsProduct = ProductMachine.productsLinearSolver.Single(r => r.ProductName.Equals("Ograničenje"));
+                    if (limitationsProduct.MachineValues[limitationCounter].Equals("<="))
+                    {
+                        z += A + "x1" + " + " + B + "x2" + " ≥ " + C + "\n";
+
+                    }
+                    else if (limitationsProduct.MachineValues[limitationCounter].Equals(">="))
+                    {
+                        z += A + "x1" + " + " + B + "x2" + " ≤ " + C + "\n";
+                    }
+                    else if (limitationsProduct.MachineValues[limitationCounter].Equals("<"))
+                    {
+                        z += A + "x1" + " + " + B + "x2" + " > " + C + "\n";
+                    }
+                    else if (limitationsProduct.MachineValues[limitationCounter].Equals(">"))
+                    {
+                        z += A + "x1" + " + " + B + "x2" + " < " + C + "\n";
+                    }
+                    else
+                    {
+                        z += A + "x1" + " + " + B + "x2" + " = " + C + "\n";
+                    }
                 }
             }
 

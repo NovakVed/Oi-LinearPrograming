@@ -45,12 +45,7 @@ namespace ProgramingSolutionOI1
             double a = lists[2];
             double b = lists[0];
 
-            if (b == 0)
-            {
-                return a;
-            }
-
-            if (a == 0 && b == 0)
+            if (a == 0 || b == 0)
             {
                 return 0;
             }
@@ -65,12 +60,7 @@ namespace ProgramingSolutionOI1
             double a = lists[2];
             double b = lists[1];
 
-            if (b == 0)
-            {
-                return a;
-            }
-
-            if (a == 0 && b == 0)
+            if (a == 0 || b == 0)
             {
                 return 0;
             }
@@ -82,7 +72,6 @@ namespace ProgramingSolutionOI1
         public List<double> FindGoalFunctionOriginals()
         {
             List<double> results = new List<double>();
-            double goalsFunction = 0;
             double tempTemp = 0;
             foreach (var item in FindAllLine_LineIntersections_Originals())
             {
@@ -96,7 +85,6 @@ namespace ProgramingSolutionOI1
                     double temp = double.Parse(goalsListFunctions[0].ToString()) * item[0] + double.Parse(goalsListFunctions[1].ToString()) * item[1];
                     if (temp > tempTemp)
                     {
-                        goalsFunction = temp;
                         results.Clear();
                         results = item;
                     }
@@ -104,13 +92,32 @@ namespace ProgramingSolutionOI1
             }
             return results;
         }
+
         //TODO
         public List<double> FindGoalFunctionDuals()
         {
-            List<double> results = FindAllLine_LineIntersections_Duals();
-
+            List<double> results = new List<double>();
+            double tempTemp = 0;
+            foreach (var item in FindAllLine_LineIntersections_Duals())
+            {
+                if (CheckLimitationsDuals(item) == true)
+                {
+                    List<int> goalsListFunctions = ProductMachine.duals[0];
+                    if (results.Any())
+                    {
+                        tempTemp = double.Parse(goalsListFunctions[0].ToString()) * results[0] + double.Parse(goalsListFunctions[1].ToString()) * results[1];
+                    }
+                    double temp = double.Parse(goalsListFunctions[0].ToString()) * item[0] + double.Parse(goalsListFunctions[1].ToString()) * item[1];
+                    if (temp > tempTemp)
+                    {
+                        results.Clear();
+                        results = item;
+                    }
+                }
+            }
             return results;
         }
+
         //TOOD: ubaci točke sjecišta sa grafom
         public List<List<double>> FindAllLine_LineIntersections_Originals()
         {
@@ -252,9 +259,9 @@ namespace ProgramingSolutionOI1
         }
 
         //TODO
-        public List<double> FindAllLine_LineIntersections_Duals()
+        public List<List<double>> FindAllLine_LineIntersections_Duals()
         {
-            List<double> results = new List<double>();
+            List<List<double>> linesIntersectionPoints = new List<List<double>>();
             foreach (var item in ProductMachine.duals)
             {
                 int index = ProductMachine.duals.IndexOf(item);
@@ -280,13 +287,18 @@ namespace ProgramingSolutionOI1
                             {
                                 double x = (B2 * C1 - B1 * C2) / det;
                                 double y = (A1 * C2 - A2 * C1) / det;
-
+                                //TODO: bug ako postoji jedna varijabla manja od 0, ako je druga veca trebalo bi ispisivati pravac
                                 if (x >= 0 || y >= 0)
                                 {
-                                    if (results.Contains(x) == false && results.Contains(y) == false)
+                                    List<double> itemResults = new List<double>
                                     {
-                                        results.Add(x);
-                                        results.Add(y);
+                                        x,
+                                        y
+                                    };
+
+                                    if (ContainsList(linesIntersectionPoints, itemResults) == false)
+                                    {
+                                        linesIntersectionPoints.Add(itemResults);
                                     }
                                 }
                             }
@@ -294,7 +306,83 @@ namespace ProgramingSolutionOI1
                     }
                 }
             }
-            return results;
+            return linesIntersectionPoints;
+        }
+
+        public bool CheckLimitationsDuals(List<double> linesIntersectionPoints)
+        {
+            List<int> goalsListFunctions = ProductMachine.duals[0];
+            Product machineValuesForDuals = ProductMachine.productsLinearSolver.Single(r => r.ProductName.Equals("Kapacitet"));
+            Product limitationsProduct = ProductMachine.productsLinearSolver.Single(r => r.ProductName.Equals("Ograničenje"));
+            int counter = 0;
+            int counterInsideDuals = 1;
+            bool correct = false;
+            foreach (var item in limitationsProduct.MachineValues)
+            {
+                if (item == "<=")
+                {
+                    double temp = double.Parse(ProductMachine.duals[counterInsideDuals][0].ToString()) * linesIntersectionPoints[0] + double.Parse(ProductMachine.duals[counterInsideDuals][1].ToString()) * linesIntersectionPoints[1];
+                    if (temp >= double.Parse(ProductMachine.duals[counterInsideDuals][2].ToString()))
+                    {
+                        correct = true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else if (item.Equals(">="))
+                {
+                    double temp = double.Parse(ProductMachine.duals[counterInsideDuals][0].ToString()) * linesIntersectionPoints[0] + double.Parse(ProductMachine.duals[counterInsideDuals][1].ToString()) * linesIntersectionPoints[1];
+                    if (temp <= double.Parse(ProductMachine.duals[counterInsideDuals][2].ToString()))
+                    {
+                        correct = true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else if (item.Equals("="))
+                {
+                    double temp = double.Parse(ProductMachine.duals[counterInsideDuals][0].ToString()) * linesIntersectionPoints[0] + double.Parse(ProductMachine.duals[counterInsideDuals][1].ToString()) * linesIntersectionPoints[1];
+                    if (temp == double.Parse(ProductMachine.duals[counterInsideDuals][2].ToString()))
+                    {
+                        correct = true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else if (item.Equals(">"))
+                {
+                    double temp = double.Parse(ProductMachine.duals[counterInsideDuals][0].ToString()) * linesIntersectionPoints[0] + double.Parse(ProductMachine.duals[counterInsideDuals][1].ToString()) * linesIntersectionPoints[1];
+                    if (temp < double.Parse(ProductMachine.duals[counterInsideDuals][2].ToString()))
+                    {
+                        correct = true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else if (item.Equals("<"))
+                {
+                    double temp = double.Parse(ProductMachine.duals[counterInsideDuals][0].ToString()) * linesIntersectionPoints[0] + double.Parse(ProductMachine.duals[counterInsideDuals][1].ToString()) * linesIntersectionPoints[1];
+                    if (temp > double.Parse(ProductMachine.duals[counterInsideDuals][2].ToString()))
+                    {
+                        correct = true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                counter++;
+                counterInsideDuals++;
+            }
+            return correct;
         }
     }
 }

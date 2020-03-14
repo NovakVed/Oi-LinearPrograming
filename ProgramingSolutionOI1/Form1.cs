@@ -320,12 +320,13 @@ namespace ProgramingSolutionOI1
             //Odabrana je dualna metoda
             else
             {
-                //Ako postoji graf izbrisi ga
+                //Ako postoji graf, izbrisi ga
                 if (Chart.Series.Any())
                 {
                     Chart.Series.Clear();
                 }
                 int counter = 1;
+                //productMachine.SetDataForOriginalProblemInListDuals();
                 LinearSolver solver = new LinearSolver();
                 foreach (List<int> item in ProductMachine.duals)
                 {
@@ -334,10 +335,31 @@ namespace ProgramingSolutionOI1
                         string lineName = "p" + counter;
                         Chart.Series.Add(lineName);
                         Chart.Series[lineName].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-                        Chart.Series[lineName].Color = Color.Black;
+                        Chart.Series[lineName].Color = Color.Blue;
+                        Chart.Series[lineName].BorderWidth = 2;
 
-                        Chart.Series[lineName].Points.AddXY(solver.FindAxisXDual(counter), 0);
-                        Chart.Series[lineName].Points.AddXY(0, solver.FindAxisYDual(counter));
+                        double axisX = solver.FindAxisXDual(counter);
+                        double axisY = solver.FindAxisYDual(counter);
+
+                        //TODO: Pitaj kako se rješava crtanje vertikalne linije na grafu
+                        double avarageX = ProductMachine.duals.Average(r => r[1]) * 3;
+                        double avarageY = ProductMachine.duals.Average(r => r[1]) * 3;
+
+                        if (axisX == 0)
+                        {
+                            Chart.Series[lineName].Points.AddXY(0, axisY);
+                            Chart.Series[lineName].Points.AddXY(avarageX, axisY);
+                        }
+                        else if (axisY == 0)
+                        {
+                            Chart.Series[lineName].Points.AddXY(axisX, 0);
+                            Chart.Series[lineName].Points.AddXY(axisX, avarageY);
+                        }
+                        else
+                        {
+                            Chart.Series[lineName].Points.AddXY(axisX, 0);
+                            Chart.Series[lineName].Points.AddXY(0, axisY);
+                        }
 
                         counter++;
                     }
@@ -354,15 +376,25 @@ namespace ProgramingSolutionOI1
                     Chart.Series.Add("Funkcija Cilja");
                     Chart.Series["Funkcija Cilja"].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
                     Chart.Series["Funkcija Cilja"].Color = Color.Green;
+                    Chart.Series["Funkcija Cilja"].BorderWidth = 2;
 
                     Chart.Series["Funkcija Cilja"].Points.AddXY(goalFunctions[0], 0);
                     Chart.Series["Funkcija Cilja"].Points.AddXY(0, goalFunctions[1]);
 
+                    Chart.Series.Add("Točka Funkcije Cilja");
+                    Chart.Series["Točka Funkcije Cilja"].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Point;
+                    Chart.Series["Točka Funkcije Cilja"].Color = Color.Red;
+                    Chart.Series["Točka Funkcije Cilja"].BorderWidth = 3;
+                    Chart.Series["Točka Funkcije Cilja"].Points.AddXY(goalFunctions[0], goalFunctions[1]);
+                    Chart.Series["Točka Funkcije Cilja"].LegendText = "Točka Funkcije Cilja: \n" + "M(" + goalFunctions[0] + ", " + goalFunctions[1] + ")";
+                    Chart.Series["Točka Funkcije Cilja"].Label = "M(" + goalFunctions[0] + ", " + goalFunctions[1] + ")";
+                    Chart.Series["Točka Funkcije Cilja"].ToolTip = "M(" + goalFunctions[0] + ", " + goalFunctions[1] + ")";
+
                     List<int> zs = ProductMachine.duals[0];
-                    double z = goalFunctions[0] * zs[0] + goalFunctions[1] * zs[1];
+                    double z = zs[0] * goalFunctions[0] + zs[1] * goalFunctions[1];
 
                     RtxtFormulaResult.Text += "\n\nRezultat funckije cilja: \n";
-                    RtxtFormulaResult.Text += "Z = " + goalFunctions[0] + " x " + zs[0] + " + " + goalFunctions[1] + " x " + zs[1] + " = " + z;
+                    RtxtFormulaResult.Text += "Z = " + zs[0] + " x " + goalFunctions[0] + " + " + zs[1] + " x " + goalFunctions[1] + " = " + z;
                     RtxtFormulaResult.Text += "\nM(" + goalFunctions[0] + ", " + goalFunctions[1] + ")";
                 }
             }
