@@ -13,6 +13,7 @@ namespace ProgramingSolutionOI1
     public partial class Form1 : Form
     {
         //TODO: Napravi za minimum
+        //TODO: Popravi ograničenja
         //TODO: Popravi upis u tablicu
         private DataTable DataTableProductMachine;
         ProductMachine productMachine = new ProductMachine();
@@ -228,8 +229,11 @@ namespace ProgramingSolutionOI1
             chart.AxisY.Minimum = 0;
 
             //Ako želimo postaviti svoj defoult razmak između svakog intervala
+            //chart.AxisX.Interval = 10;
+            //chart.AxisY.Interval = 10;
 
             Chart.Series[0].IsVisibleInLegend = false;
+            //TODO: Uzmi najvece rjesenje
             //Odabrana je originalna metoda
             if (btnPressed == 1)
             {
@@ -239,6 +243,7 @@ namespace ProgramingSolutionOI1
                     Chart.Series.Clear();
                 }
                 int counter = 1;
+                //productMachine.SetDataForOriginalProblemInListOriginals();
                 LinearSolver solver = new LinearSolver();
                 foreach (List<int> item in ProductMachine.originals)
                 {
@@ -253,7 +258,7 @@ namespace ProgramingSolutionOI1
                         double axisX = solver.FindAxisX(counter);
                         double axisY = solver.FindAxisY(counter);
 
-                        //TODO: Popravi avg ispis grafa, tako da umjesto avg uzima najvecu vrijednost od svih prijasnjih grafova
+                        //TODO: Pitaj kako se rješava crtanje vertikalne linije na grafu
                         double avarageX = ProductMachine.originals.Average(r => r[1]) * 3;
                         double avarageY = ProductMachine.originals.Average(r => r[1]) * 3;
 
@@ -310,7 +315,8 @@ namespace ProgramingSolutionOI1
                     RtxtFormulaResult.Text += "\nM(" + goalFunctions[0] + ", "+ goalFunctions[1] + ")";
                 }
             }
-
+            //TODO: Uzmi najmanje rjesenje
+            //TODO
             //Odabrana je dualna metoda
             else
             {
@@ -320,6 +326,7 @@ namespace ProgramingSolutionOI1
                     Chart.Series.Clear();
                 }
                 int counter = 1;
+                //productMachine.SetDataForOriginalProblemInListDuals();
                 LinearSolver solver = new LinearSolver();
                 foreach (List<int> item in ProductMachine.duals)
                 {
@@ -334,7 +341,7 @@ namespace ProgramingSolutionOI1
                         double axisX = solver.FindAxisXDual(counter);
                         double axisY = solver.FindAxisYDual(counter);
 
-                        //TODO: Popravi avg ispis grafa, tako da umjesto avg uzima najvecu vrijednost od svih prijasnjih grafova
+                        //TODO: Pitaj kako se rješava crtanje vertikalne linije na grafu
                         double avarageX = ProductMachine.duals.Average(r => r[1]) * 3;
                         double avarageY = ProductMachine.duals.Average(r => r[1]) * 3;
 
