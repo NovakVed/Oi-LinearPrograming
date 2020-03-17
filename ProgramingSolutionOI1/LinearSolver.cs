@@ -211,7 +211,6 @@ namespace ProgramingSolutionOI1
             return results;
         }
 
-        //TOOD: ubaci točke sjecišta sa grafom
         public List<List<double>> FindAllLine_LineIntersections_Originals()
         {
             List<List<double>> linesIntersectionPoints = new List<List<double>>();
