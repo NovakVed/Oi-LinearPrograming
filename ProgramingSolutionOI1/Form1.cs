@@ -24,7 +24,7 @@ namespace ProgramingSolutionOI1
             InitializeComponent();
 
             DataTableProductMachine = new DataTable();
-            DataTableProductMachine.Columns.Add("Naziv proizvoda");
+            DataTableProductMachine.Columns.Add("Naziv proizvoda/stroja");
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -34,6 +34,10 @@ namespace ProgramingSolutionOI1
 
             CmbTypeOfRevenue.SelectedIndex = 0;
             BtnAddProductNetIncome.Enabled = false;
+            BtnOriginalMethod.Enabled = false;
+            BtnDualMethod.Enabled = false;
+            BtnLoadGraph.Enabled = false;
+
         }
 
         private void BtnAddMachine_Click(object sender, EventArgs e)
@@ -129,6 +133,10 @@ namespace ProgramingSolutionOI1
             BtnAddProductNetIncome.Enabled = false;
             BtnDeleteColumn.Enabled = false;
             BtnAddMachineCapacityAndLimitation.Enabled = false;
+
+            BtnOriginalMethod.Enabled = true;
+            BtnDualMethod.Enabled = true;
+            BtnLoadGraph.Enabled = true;
         }
 
         private void GetDataFromDataTable()
@@ -240,6 +248,27 @@ namespace ProgramingSolutionOI1
                 }
                 int counter = 1;
                 LinearSolver solver = new LinearSolver();
+
+                double averageX = 0;
+                double averageY = 0;
+
+                foreach (List<int> item in ProductMachine.originals)
+                {
+                    if (item.Count != 2)
+                    {
+                        double tempX = ProductMachine.originals.Average(r => r[1]) * 10;
+                        double tempY = ProductMachine.originals.Average(r => r[1]) * 10;
+                        if (tempX > averageX)
+                        {
+                            averageX = tempX;
+                        }
+                        if (tempY > averageY)
+                        {
+                            averageY = tempY;
+                        }
+                    }
+                }
+
                 foreach (List<int> item in ProductMachine.originals)
                 {
                     if (item.Count != 2)
@@ -254,18 +283,18 @@ namespace ProgramingSolutionOI1
                         double axisY = solver.FindAxisY(counter);
 
                         //TODO: Popravi avg ispis grafa, tako da umjesto avg uzima najvecu vrijednost od svih prijasnjih grafova
-                        double avarageX = ProductMachine.originals.Average(r => r[1]) * 3;
-                        double avarageY = ProductMachine.originals.Average(r => r[1]) * 3;
+                        //averageX = ProductMachine.originals.Average(r => r[1]) * 3;
+                        //averageY = ProductMachine.originals.Average(r => r[1]) * 3;
 
                         if (axisX == 0)
                         {
                             Chart.Series[lineName].Points.AddXY(0, axisY);
-                            Chart.Series[lineName].Points.AddXY(avarageX, axisY);
+                            Chart.Series[lineName].Points.AddXY(averageX, axisY);
                         }
                         else if (axisY == 0)
                         {
                             Chart.Series[lineName].Points.AddXY(axisX, 0);
-                            Chart.Series[lineName].Points.AddXY(axisX, avarageY);
+                            Chart.Series[lineName].Points.AddXY(axisX, averageY);
                         }
                         else
                         {
@@ -281,17 +310,20 @@ namespace ProgramingSolutionOI1
                 //Ako je lista prazna znači da ne postoji funkciju cilja
                 if (!goalFunctions.Any())
                 {
-                    MessageBox.Show("Nema funckije cilja", "Error");
+                    MessageBox.Show("Nije pronađeno optimalno riješenje", "Error");
                 }
                 else
                 {
-                    Chart.Series.Add("Funkcija Cilja");
+                    MessageBox.Show("Pronađeno optimalno riješenje", "Uspijeh");
+                    //Pravac funkcija cilja je maknut zbog bug.a ako vrijednost pravac na puno vecoj x,y kordinatam
+                    //u odnosu na nacrtane pravce s ograničenjima, oni se neće vidjeti zbog njega
+                    /*Chart.Series.Add("Funkcija Cilja");
                     Chart.Series["Funkcija Cilja"].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
                     Chart.Series["Funkcija Cilja"].Color = Color.Green;
                     Chart.Series["Funkcija Cilja"].BorderWidth = 2;
 
-                    Chart.Series["Funkcija Cilja"].Points.AddXY(goalFunctions[0], 0);
-                    Chart.Series["Funkcija Cilja"].Points.AddXY(0, goalFunctions[1]);
+                    Chart.Series["Funkcija Cilja"].Points.AddXY(ProductMachine.originals[0][1], 0);
+                    Chart.Series["Funkcija Cilja"].Points.AddXY(0, ProductMachine.originals[0][0]);*/
 
                     Chart.Series.Add("Točka Funkcije Cilja");
                     Chart.Series["Točka Funkcije Cilja"].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Point;
@@ -321,6 +353,26 @@ namespace ProgramingSolutionOI1
                 }
                 int counter = 1;
                 LinearSolver solver = new LinearSolver();
+
+                double averageX = 0;
+                double averageY = 0;
+                foreach (List<int> item in ProductMachine.duals)
+                {
+                    if (item.Count != 2)
+                    {
+                        double tempX = ProductMachine.duals.Average(r => r[1]) * 10;
+                        double tempY = ProductMachine.duals.Average(r => r[1]) * 10;
+                        if (tempX > averageX)
+                        {
+                            averageX = tempX;
+                        }
+                        if (tempY > averageY)
+                        {
+                            averageY = tempY;
+                        }
+                    }
+                }
+
                 foreach (List<int> item in ProductMachine.duals)
                 {
                     if (item.Count != 2)
@@ -335,18 +387,18 @@ namespace ProgramingSolutionOI1
                         double axisY = solver.FindAxisYDual(counter);
 
                         //TODO: Popravi avg ispis grafa, tako da umjesto avg uzima najvecu vrijednost od svih prijasnjih grafova
-                        double avarageX = ProductMachine.duals.Average(r => r[1]) * 3;
-                        double avarageY = ProductMachine.duals.Average(r => r[1]) * 3;
+                        //double avarageX = ProductMachine.duals.Average(r => r[1]) * 3;
+                        //double avrageY = ProductMachine.duals.Average(r => r[1]) * 3;
 
                         if (axisX == 0)
                         {
                             Chart.Series[lineName].Points.AddXY(0, axisY);
-                            Chart.Series[lineName].Points.AddXY(avarageX, axisY);
+                            Chart.Series[lineName].Points.AddXY(averageX, axisY);
                         }
                         else if (axisY == 0)
                         {
                             Chart.Series[lineName].Points.AddXY(axisX, 0);
-                            Chart.Series[lineName].Points.AddXY(axisX, avarageY);
+                            Chart.Series[lineName].Points.AddXY(axisX, averageY);
                         }
                         else
                         {
@@ -362,17 +414,20 @@ namespace ProgramingSolutionOI1
                 //Ako je lista prazna znači da ne postoji funkciju cilja
                 if (!goalFunctions.Any())
                 {
-                    MessageBox.Show("Nema funckije cilja", "Error");
+                    MessageBox.Show("Nije pronađeno optimalno riješenje", "Error");
                 }
                 else
                 {
-                    Chart.Series.Add("Funkcija Cilja");
+                    MessageBox.Show("Pronađeno optimalno riješenje", "Uspijeh");
+                    //Pravac funkcija cilja je maknut zbog bug.a ako vrijednost pravac na puno vecoj x,y kordinatam
+                    //u odnosu na nacrtane pravce s ograničenjima, oni se neće vidjeti zbog njega
+                    /*Chart.Series.Add("Funkcija Cilja");
                     Chart.Series["Funkcija Cilja"].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
                     Chart.Series["Funkcija Cilja"].Color = Color.Green;
                     Chart.Series["Funkcija Cilja"].BorderWidth = 2;
 
-                    Chart.Series["Funkcija Cilja"].Points.AddXY(goalFunctions[0], 0);
-                    Chart.Series["Funkcija Cilja"].Points.AddXY(0, goalFunctions[1]);
+                    Chart.Series["Funkcija Cilja"].Points.AddXY(ProductMachine.duals[0][1], 0);
+                    Chart.Series["Funkcija Cilja"].Points.AddXY(0, ProductMachine.duals[0][0]);*/
 
                     Chart.Series.Add("Točka Funkcije Cilja");
                     Chart.Series["Točka Funkcije Cilja"].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Point;

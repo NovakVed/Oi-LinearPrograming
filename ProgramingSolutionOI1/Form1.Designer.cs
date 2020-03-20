@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.dgvTableProductMachine = new System.Windows.Forms.DataGridView();
             this.BtnAddMachine = new System.Windows.Forms.Button();
             this.BtnAddMachineCapacityAndLimitation = new System.Windows.Forms.Button();
@@ -44,9 +44,13 @@
             this.BtnLoadGraph = new System.Windows.Forms.Button();
             this.BtnDualMethod = new System.Windows.Forms.Button();
             this.Chart = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
             ((System.ComponentModel.ISupportInitialize)(this.dgvTableProductMachine)).BeginInit();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Chart)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // dgvTableProductMachine
@@ -85,7 +89,7 @@
             this.BtnAddProductNetIncome.Name = "BtnAddProductNetIncome";
             this.BtnAddProductNetIncome.Size = new System.Drawing.Size(105, 72);
             this.BtnAddProductNetIncome.TabIndex = 4;
-            this.BtnAddProductNetIncome.Text = "Neto Prihod";
+            this.BtnAddProductNetIncome.Text = "Dodaj Neto Prihod";
             this.BtnAddProductNetIncome.UseVisualStyleBackColor = true;
             this.BtnAddProductNetIncome.Click += new System.EventHandler(this.BtnAddProductNetIncome_Click);
             // 
@@ -115,7 +119,7 @@
             // 
             // BtnOriginalMethod
             // 
-            this.BtnOriginalMethod.Location = new System.Drawing.Point(822, 401);
+            this.BtnOriginalMethod.Location = new System.Drawing.Point(821, 130);
             this.BtnOriginalMethod.Name = "BtnOriginalMethod";
             this.BtnOriginalMethod.Size = new System.Drawing.Size(235, 56);
             this.BtnOriginalMethod.TabIndex = 2;
@@ -129,7 +133,7 @@
             this.CmbTypeOfRevenue.Items.AddRange(new object[] {
             "Maksimalni prihod",
             "Minimalni prihod"});
-            this.CmbTypeOfRevenue.Location = new System.Drawing.Point(820, 306);
+            this.CmbTypeOfRevenue.Location = new System.Drawing.Point(819, 35);
             this.CmbTypeOfRevenue.Name = "CmbTypeOfRevenue";
             this.CmbTypeOfRevenue.Size = new System.Drawing.Size(235, 24);
             this.CmbTypeOfRevenue.TabIndex = 6;
@@ -137,7 +141,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(820, 280);
+            this.label1.Location = new System.Drawing.Point(819, 9);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(146, 17);
             this.label1.TabIndex = 7;
@@ -153,7 +157,7 @@
             // 
             // BtnLoadGraph
             // 
-            this.BtnLoadGraph.Location = new System.Drawing.Point(823, 525);
+            this.BtnLoadGraph.Location = new System.Drawing.Point(822, 254);
             this.BtnLoadGraph.Name = "BtnLoadGraph";
             this.BtnLoadGraph.Size = new System.Drawing.Size(235, 56);
             this.BtnLoadGraph.TabIndex = 9;
@@ -163,7 +167,7 @@
             // 
             // BtnDualMethod
             // 
-            this.BtnDualMethod.Location = new System.Drawing.Point(823, 463);
+            this.BtnDualMethod.Location = new System.Drawing.Point(822, 192);
             this.BtnDualMethod.Name = "BtnDualMethod";
             this.BtnDualMethod.Size = new System.Drawing.Size(234, 56);
             this.BtnDualMethod.TabIndex = 10;
@@ -173,26 +177,45 @@
             // 
             // Chart
             // 
-            chartArea2.Name = "ChartArea1";
-            this.Chart.ChartAreas.Add(chartArea2);
-            legend2.Name = "Legend1";
-            this.Chart.Legends.Add(legend2);
+            chartArea1.Name = "ChartArea1";
+            this.Chart.ChartAreas.Add(chartArea1);
+            legend1.Name = "Legend1";
+            this.Chart.Legends.Add(legend1);
             this.Chart.Location = new System.Drawing.Point(21, 525);
             this.Chart.Name = "Chart";
-            series2.ChartArea = "ChartArea1";
-            series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            series2.Legend = "Legend1";
-            series2.Name = "Series1";
-            this.Chart.Series.Add(series2);
+            series1.ChartArea = "ChartArea1";
+            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series1.Legend = "Legend1";
+            series1.Name = "Series1";
+            this.Chart.Series.Add(series1);
             this.Chart.Size = new System.Drawing.Size(792, 439);
             this.Chart.TabIndex = 11;
             this.Chart.Text = "chart";
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = global::ProgramingSolutionOI1.Properties.Resources.PrimjerUnosa;
+            this.pictureBox1.Location = new System.Drawing.Point(10, 44);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(730, 278);
+            this.pictureBox1.TabIndex = 12;
+            this.pictureBox1.TabStop = false;
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.pictureBox1);
+            this.groupBox2.Location = new System.Drawing.Point(1082, 2);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(756, 328);
+            this.groupBox2.TabIndex = 13;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Primjer Unosa Podataka";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1066, 976);
+            this.ClientSize = new System.Drawing.Size(1850, 976);
             this.Controls.Add(this.Chart);
             this.Controls.Add(this.BtnDualMethod);
             this.Controls.Add(this.BtnLoadGraph);
@@ -201,12 +224,15 @@
             this.Controls.Add(this.CmbTypeOfRevenue);
             this.Controls.Add(this.BtnOriginalMethod);
             this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.groupBox2);
             this.Name = "Form1";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgvTableProductMachine)).EndInit();
             this.groupBox1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.Chart)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            this.groupBox2.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -227,6 +253,8 @@
         private System.Windows.Forms.Button BtnLoadGraph;
         private System.Windows.Forms.Button BtnDualMethod;
         private System.Windows.Forms.DataVisualization.Charting.Chart Chart;
+        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.GroupBox groupBox2;
     }
 }
 

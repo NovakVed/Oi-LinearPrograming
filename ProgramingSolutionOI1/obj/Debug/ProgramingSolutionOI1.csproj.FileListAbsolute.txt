@@ -18,3 +18,4 @@ C:\Users\edoro\Desktop\Oi-LinearPrograming\ProgramingSolutionOI1\obj\Debug\Progr
 C:\Users\edoro\Desktop\Oi-LinearPrograming\ProgramingSolutionOI1\obj\Debug\ProgramingSolutionOI1.csproj.GenerateResource.cache
 C:\Users\edoro\Desktop\Oi-LinearPrograming\ProgramingSolutionOI1\obj\Debug\ProgramingSolutionOI1.exe
 C:\Users\edoro\Desktop\Oi-LinearPrograming\ProgramingSolutionOI1\obj\Debug\ProgramingSolutionOI1.pdb
+C:\Users\edoro\Desktop\Oi-LinearPrograming\ProgramingSolutionOI1\obj\Debug\ProgramingSolutionOI1.csproj.CoreCompileInputs.cache
